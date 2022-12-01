@@ -1,22 +1,23 @@
-package com.example.mysqldemo.usermanagement.listAllUsers;
+package com.example.mysqldemo.usermanagement.getUserDetails;
 
 import com.example.mysqldemo.usermanagement.common.jpa.User;
 import com.example.mysqldemo.usermanagement.common.jpa.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
-class ListAllUsersEndpoint {
+public class GetUserDetailsEndpoint {
+
     final UserRepository userRepository;
 
-    @GetMapping
-    public List<User> users() {
-        return userRepository.findAll();
+    @GetMapping("{id}")
+    public User getUserDetails(@PathVariable("id") Long userId) {
+        return userRepository.findById( userId ).get();
     }
+
 }
