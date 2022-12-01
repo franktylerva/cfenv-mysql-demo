@@ -1,13 +1,10 @@
 version: '3.3'
 services:
   db:
-    image: mysql:5.7
+    image: biarms/mysql:5.7
     restart: always
-    cap_add:
-      - SYS_NICE # CAP_SYS_NICE
     volumes:
-      - ./cache/mysql:/var/lib/mysql
-      - ./conf-mysql.cnf:/etc/mysql/conf.d/mysql.cnf
+      - ./build/data/mysql:/var/lib/mysql
     environment:
       MYSQL_DATABASE: 'demodb'
       MYSQL_USER: 'demouser'
