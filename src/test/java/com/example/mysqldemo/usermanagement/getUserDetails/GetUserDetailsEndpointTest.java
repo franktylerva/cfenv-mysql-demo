@@ -1,4 +1,4 @@
-package com.example.mysqldemo.usermanagement.getAllUsers;
+package com.example.mysqldemo.usermanagement.getUserDetails;
 
 import com.example.mysqldemo.usermanagement.common.jpa.User;
 import com.example.mysqldemo.usermanagement.common.jpa.UserRepository;
@@ -8,18 +8,18 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(ListAllUsersEndpoint.class)
-class ListAllUsersEndpointTest {
+@WebMvcTest(GetUserDetailsEndpoint.class)
+class GetUserDetailsEndpointTest {
 
     @Autowired
     private MockMvc mvc;
@@ -28,28 +28,20 @@ class ListAllUsersEndpointTest {
     private UserRepository userRepository;
 
     @Test
-    public void testListAllUsersEndpoint() throws Exception {
+    public void testGetUserDetailsEndpoint() throws Exception {
 
         var john = User.builder()
                 .id(1L)
                 .email("johndoe@gmail.com")
                 .build();
 
-        var jane = john.toBuilder()
-                .id(2L)
-                .email("janedoe@gmail.com")
-                .build();
+        when(userRepository.findById(john.getId())).thenReturn(Optional.of(john));
 
-        when(userRepository.findAll()).thenReturn(List.of(john, jane));
-
-        mvc.perform(get("/api/users"))
+        mvc.perform(get("/api/users/1"))
                 .andExpect(status().isOk())
                 .andDo(print())
-                .andExpect( jsonPath("$.users[0].id", is(1) ) )
-                .andExpect( jsonPath("$.users[0].email", is("johndoe@gmail.com") ) )
-                .andExpect( jsonPath("$.users[1].id", is(2) ) )
-                .andExpect( jsonPath("$.users[1].email", is("janedoe@gmail.com") ) );
-
+                .andExpect( jsonPath("$.user.id", is(1) ) )
+                .andExpect( jsonPath("$.user.email", is("johndoe@gmail.com") ) );
     }
 
 }

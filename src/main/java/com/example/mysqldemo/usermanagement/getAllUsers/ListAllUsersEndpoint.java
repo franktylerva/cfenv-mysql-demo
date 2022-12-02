@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -16,7 +17,7 @@ class ListAllUsersEndpoint {
     final UserRepository userRepository;
 
     @GetMapping
-    public List<User> users() {
-        return userRepository.findAll();
+    public Map<String,Object> users() {
+        return Map.of("users", userRepository.findAll());
     }
 }
